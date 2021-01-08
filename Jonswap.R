@@ -1,8 +1,3 @@
-
-
-##theta = (alpha,omega p,gamma,r)
-## for negative or positive frequncies
-
 jonswap <- function(w,theta){
   g <-c()
   for(i in 1:length(w))
