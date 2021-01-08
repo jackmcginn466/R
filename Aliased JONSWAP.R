@@ -46,13 +46,13 @@ autocovarianceFunction <- autocovarianceFunction[1:TotalNumberSamplePoints]
 
 sigma <- toeplitz(autocovarianceFunction)
 
-matrixL <- chol(sigma)##THIS ONLY WORKS FOR SPECIFIC TIME INTERVAL AND SAMPLE POINTS COMBINATIONS - CHECK WHY
+matrixL <- chol(sigma)
 
 x <- rnorm(TotalNumberSamplePoints,0,1)
 
-y <- t(matrixL) %*% x   ## times transpose of matrixL as t(matrixL) * matrixL gave sigma not the other way around
+y <- t(matrixL) %*% x   ## times transpose of matrixL as t(matrixL) * matrixL gave sigma 
 
-##CHECK RANGE ON TIM, MINUSING ONE TIME INTERVAL AT THE END
+
 times <- seq(0,(TimeInterval*TotalNumberSamplePoints)-TimeInterval,TimeInterval)
 
 ##Plot wave
@@ -61,6 +61,7 @@ points(times, y,pch = "." ,col = "red")
 lines(times, y, xlim=range(times), ylim=range(y), pch=16)
 length(y)
 length(times)
+
 ##Generate JONSWAP for plot
 angfreqforjonswapplot <-seq(0,pi/TimeInterval,(2*pi)/(100*(TimeInterval*TotalNumberSamplePoints)))
 jonswapPointsaliased <-DiscreteSpectralDensityCalculation(angfreqforjonswapplot,TimeInterval,6,theta)
