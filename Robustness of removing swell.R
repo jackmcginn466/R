@@ -1,8 +1,3 @@
-#Robustness of removing swell code
-#Removing swell
-#23rd june a good day and 15th
-#june 8th has good 2 peak split
-#Parameter estimates of real world data
 #install.packages("bayestestR")
 #install.packages("ggpmisc")
 #install.packages("pracma")
@@ -12,11 +7,6 @@ library(bayestestR)
 library(R.matlab) # for loading mat files
 library(resample) # for std of columns
 #######################################################
-### example of loading a record
-## make sure the working directory is set to the correct location (if it is different you may need to add folder names etc)
-# note you don't have to use sprintf, but this will help you to do this in a loop if you want
-
-##CURRENT DATES AND TIME RETURN REALLY GOOD FREQUENCY SELECTION GRAPHS
 
 buoyName = "Wavehub"
 year = 2017
@@ -132,7 +122,7 @@ for(q in 1:length(lowerfreqlist)){
 }
 
 
-#plot(x = NULL, y = NULL, main = "Periodogram and estimated spectral density", xlab = "Omega", ylab = "Estimated spectral density", xlim = c(0,3.5), ylim=c(-0,max(I)))
+plot(x = NULL, y = NULL, main = "Periodogram and estimated spectral density", xlab = "Omega", ylab = "Estimated spectral density", xlim = c(0,3.5), ylim=c(-0,max(I)))
 
 
 frequencyboundchange <- seq(-0.3,0.3,0.01)
