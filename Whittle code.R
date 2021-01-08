@@ -28,32 +28,23 @@ theta <- c(0.7,0.7,3.3,4)
 DiscreteFrequenciesFirstHalf <- seq(0,((2*pi)*((TotalNumberSamplePoints/2)-1))/(TimeInterval*TotalNumberSamplePoints),(2*pi)/(TimeInterval*TotalNumberSamplePoints))
 DiscreteFrequenciesSecondHalf <- seq(pi/TimeInterval, (2*pi)/(TimeInterval*TotalNumberSamplePoints), -(2*pi)/(TimeInterval*TotalNumberSamplePoints))
 AngularFrequencies <- c(DiscreteFrequenciesFirstHalf, DiscreteFrequenciesSecondHalf)
-##CHECK THIS IS DONE CORRECTLY, I have done 0 to ((2*pi)*((M/2)-1))/(delta*M) for the first half and then the frequencies go back down again from pi/delta to 2*pi/M*delta (goes to being one interval off 0 again)
 
-##TO DO THE OVERSAMPLING
-#angfreqforautocov <- seq(pi/TimeInterval,20*pi/TimeInterval, 2*pi/TimeInterval*TotalNumberSamplePoints)
-#angfreqforautocov <- c(AngularFrequencies, angfreqforautocov)
-
-#DiscreteSpectralDensity <- DiscreteSpectralDensityCalculation(angfreqforautocov,TimeInterval,5,theta)
-#DiscreteSpectralDensity <- DiscreteSpectralDensity[1:TotalNumberSamplePoints]
 
 DiscreteSpectralDensity <- DiscreteSpectralDensityCalculation(AngularFrequencies,TimeInterval,5,theta)
 
-##DONE FOR OVERSAMPLING
-##TOOK THE REAL PART OF FFT, ALL COMPLEX PARTS WERE 0 JUST WOULDN'T WORK UNLESS I DID
-##DO IT FOR MORE FREQUENCIES THEN SELECT THE ONES I want
+
 autocovarianceFunction <-Re(fft(unlist(DiscreteSpectralDensity),inverse = TRUE))*(2*pi/(TimeInterval*TotalNumberSamplePoints))
 
 sigma <- toeplitz(autocovarianceFunction)
 
-matrixL <- chol.default(sigma)##THIS ONLY WORKS FOR SPECIFIC TIME INTERVAL AND SAMPLE POINTS COMBINATIONS - CHECK WHY
+matrixL <- chol.default(sigma)
 
 x <- rnorm(TotalNumberSamplePoints,0,1)
 
-y <- t(matrixL) %*% x   ## times transpose of matrixL as t(matrixL) * matrixL gave sigma not the other way around
+y <- t(matrixL) %*% x   
 
 
-##CHECK RANGE ON TIMe, MINUSING ONE TIME INTERVAL AT THE END
+
 times <- seq(0,(TimeInterval*TotalNumberSamplePoints)-TimeInterval,TimeInterval)
 
 ##Plot wave
@@ -112,55 +103,6 @@ lines(angfreqforjonswapplot, jonswapPoints, xlim=range(angfreqforjonswapplot), y
 lines(angfreqforjonswapplot, jonswapPoints3, xlim=range(angfreqforjonswapplot), ylim=range(jonswapPoints3), pch=16, col = "blue")
 lines(angfreqforjonswapplot, jonswapPoints4, xlim=range(angfreqforjonswapplot), ylim=range(jonswapPoints4), pch=16, col = "green")
 legend(2.2, 4, legend=c( "JONSWAP", "Whittle Predicted JONSWAP", "De-biased Whittle"),col=c("red", "blue", "green"), lty=1:2, cex=0.8)
-
-#averagedPeriodogramfunc<- function(thetaList,periodogramInput = periodogram, AngularFreq = AngularFrequencies, TimeInt = TimeInterval, TotalNumberSample = TotalNumberSamplePoints ){
- # DiscreteSpectralDensityWhittle <- DiscreteSpectralDensityCalculation(AngularFreq,TimeInt, 5, thetaList)
-  #autoCov <- Re(fft(unlist(DiscreteSpectralDensityWhittle),inverse = TRUE))*(2*pi/(TimeInt*TotalNumberSample))
-  #samplePoints <- length(autoCov)
-  #discretespecdensefbar <- c() 
-  #for(q in 1:(samplePoints)){
-   # discretespecdensefbar[[q]] <- (1-((q-1)/samplePoints ))*autoCov[[q]]
-  #}
-  #fbar <- (1/(2*pi))*(Re(fft(unlist(discretespecdensefbar)))*(2*TimeInt) - (TimeInt*autoCov[[1]]))
-  #return(fbar)
-#}
-
-#xmatrix <- matrix(rnorm(TotalNumberSamplePoints*TotalNumberSamplePoints,0,1),nrow = TotalNumberSamplePoints,ncol =TotalNumberSamplePoints)
-
-#ymatrix <- t(matrixL) %*% xmatrix 
-
-#periodogramMatrix <- matrix(rep(0,TotalNumberSamplePoints*TotalNumberSamplePoints),nrow = TotalNumberSamplePoints,ncol=TotalNumberSamplePoints)
-
-#for(i in 1:TotalNumberSamplePoints){
-
- # periodogramMatrix[i,] <- TimeInterval*(1/(2*pi*TotalNumberSamplePoints))*Mod((fft(ymatrix[,i])))^2 ##ADDED IN HALF FOR NEGATIVE, CHECK THIS, I'VE DONE DIVIDE BY 4 BECAUSE I THOUGHT THE HALF WOULD BE SQUARED WITH THE FOURIER TRANSFORM AND IT FIT THE JONSWAP CURVE BETTER WHEN I DID THIS
-#}
-#averagePeriodogram <- colMeans(periodogramMatrix)
-#avgperio <- averagedPeriodogramfunc(theta)
-
-#f <- DiscreteSpectralDensityCalculation(AngularFrequencies,TimeInterval, 5, theta)
-#plot(x = NULL, y =NULL, main = "Spectral density of simulated wave with JONSWAP overlaid", xlab = "Angular Frequency (radians/s)", ylab = "Spectral Density", xlim = c(0,pi/TimeInterval), ylim = c(0,2))
-#lines(AngularFrequencies, avgperio, xlim=range(angfreqforjonswapplot), ylim=range(avgperio), pch=16, col = "red")
-#lines(AngularFrequencies, averagePeriodogram, xlim=range(AngularFrequencies), ylim=range(periodogram), pch=16, col ="blue")
-#lines(AngularFrequencies, f, xlim=range(AngularFrequencies), ylim=range(f), pch=16, col ="green")
-
-
-##Estimate parameters by comparing whittle liklihood for all variables over a range, very time consuming
-##Parameters varied over ranges to find the best value
-#thetafirst <- seq(0.01,0.99,0.01)
-#thetasecond <- seq(0.01,0.99,0.01)
-#thetathird <- seq(1,10,0.1)
-#thetafourth <- seq(1,10,0.01) ##ONLY EVEN INTEGERS
-
-
-#Plotting liklihood functions for different parameters
-#whittleList <- rep(0,length(thetafourth))
-#for(q in 1:length(thetathird)){
- # whittleList[[q]] <- whittleLiklihood(c(0.7,0.7,3.3,thetafourth[[q]]))
-#}
-#debiased
-#plot(x = NULL,y=NULL, main = "Whittle liklihood function for r ", xlab ="r", ylab = "Whittle liklihood", xlim = c(2,10), ylim = range(whittleList))
-#lines(thetafourth,whittleList, xlim = range(thetafourth), ylim = range(whittleList), pch=16 )
 
 
 amountSplit <- 100
