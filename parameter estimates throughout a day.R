@@ -4,9 +4,7 @@
 library(R.matlab) # for loading mat files
 library(resample) # for std of columns
 #######################################################
-### example of loading a record
-## make sure the working directory is set to the correct location (if it is different you may need to add folder names etc)
-# note you don't have to use sprintf, but this will help you to do this in a loop if you want
+
 buoyName = "Scilly1"
 year = 2017
 month = 6
@@ -100,5 +98,5 @@ lines(times, deBiasedbestomegap, xlim=range(times), ylim=range(deBiasedbestomega
 
 deBiasedbestomegap
 
-#deBiasedbestTheta[[1]]
+
 
