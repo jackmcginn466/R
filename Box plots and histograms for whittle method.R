@@ -55,10 +55,6 @@ for(k in 1:TotalNumberSamplePoints){
 
 }
 
-#plot(x = NULL, y =NULL, main = "Spectral density of simulated wave with JONSWAP overlaid", xlab = "Angular Frequency (radians/s)", ylab = "Spectral Density", xlim = c(0,pi/TimeInterval), ylim = c(0,4))
-#lines(AngularFrequencies, periodogram[,2], xlim=range(AngularFrequencies), ylim=range(periodogram[,2]), pch=16, col ="blue")
-
-
 ##Negative so can get max in optim
 debiasedwhittleLiklihood <- function(thetaList,periodogramInput = periodogram, AngularFreq = AngularFrequencies, TimeInt = TimeInterval, TotalNumberSample = TotalNumberSamplePoints ){
   whittle <- c()
@@ -73,7 +69,7 @@ debiasedwhittleLiklihood <- function(thetaList,periodogramInput = periodogram, A
   return(-sum(unlist(whittleL))) ##CHANGE BACK TO NEGATIVE FOR OPTIM
 }
 
-#Function to calculate Whittle liklihood for given parameters, ##returns minus whittle so it finds max value in optim not min
+#Function to calculate Whittle liklihood for given parameters, returns minus whittle so it finds max value in optim not min
 
 #THIS IS THE ALIASED WHITTLE LIKLIHOOD
 whittleLiklihood <- function(thetaList,periodogramInput = periodogram, AngularFreq = AngularFrequencies, TimeInt = TimeInterval )
@@ -93,7 +89,6 @@ for(i in 1:TotalNumberSamplePoints){
 for(i in 1:TotalNumberSamplePoints){
   debiasedwhittleestimatematrix[i,] <- optim(c(0.5,0.5,5,5), debiasedwhittleLiklihood, periodogramInput= periodogram[,i],lower=c(0.1,0.1,1.01,1.01), upper=c(0.99,0.99,5,5), method="L-BFGS-B")[[1]]
 }
-
 
 boxplot(debiasedwhittleestimatematrix[,1], whittleestimatematrix[,1],main = "Whittle Parameter estimates of alpha",at = c(1,2),names = c("debiased whittle", "whittle"),las = 2,col = c("blue","red"),border = "brown",horizontal = TRUE,notch = FALSE)
 boxplot(debiasedwhittleestimatematrix[,2], whittleestimatematrix[,2],main = "Whittle Parameter estimates of omega_p",at = c(1,2),names = c("debiased whittle", "whittle"),las = 2,col = c("blue","red"),border = "brown",horizontal = TRUE,notch = FALSE)
