@@ -3,9 +3,6 @@
 library(R.matlab) # for loading mat files
 library(resample) # for std of columns
 #######################################################
-### example of loading a record
-## make sure the working directory is set to the correct location (if it is different you may need to add folder names etc)
-# note you don't have to use sprintf, but this will help you to do this in a loop if you want
 
 
 #dim(waveData)
@@ -38,15 +35,8 @@ for(l in 1:12){
   month = month + 1
 }
 
-
-
 days = seq(0.5,365*24,0.5)
 
-
-
 filled.contour( x = days , y = omega , z = t(Imatrixyear), zlim = c(0,0.02), nlevels = 100,col = cm.colors(99))
-#zlim = range(t(Imatrixyear))
-dim(Imatrixyear)
-length(days)
-length(omega)
+
 
